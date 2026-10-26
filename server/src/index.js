@@ -189,6 +189,7 @@ function authenticate(req, res, next) {
     next();
   } catch { res.status(401).json({ message: 'Sign in to continue.' }); }
 }
+app.get('/', (_req, res) => res.type('text').send('Campus Room Scheduler API is running.'));
 app.get('/api/health', (_req, res) => res.json({ ok: true, database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' }));
 app.post('/api/auth/login', asyncRoute(async (req, res) => {
   const rawIdentifier = req.body.identifier ?? req.body.email;
