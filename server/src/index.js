@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createHmac, randomBytes, randomUUID, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { Room, Resource, Instructor, Course, Section, AcademicTerm, Schedule, ReservationRequest, User, AuditLog, BookingLock } from './models.js';
@@ -12,6 +14,7 @@ import { ROOM_FLOORS } from '../../shared/room-options.js';
 import { ROLE, ROLE_VALUES, MANAGER_ROLES, canRead, canWrite } from '../../shared/permissions.js';
 
 const app = express();
+const clientBuildPath = fileURLToPath(new URL('../../client/dist/', import.meta.url));
 const allowedOrigins = [...new Set([
   ...(process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(',').map(origin => origin.trim()).filter(Boolean),
   'https://localhost',
@@ -19,6 +22,7 @@ const allowedOrigins = [...new Set([
 ])];
 app.use(cors({ origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin)) }));
 app.use(express.json({ limit: '1mb' }));
+app.use(express.static(clientBuildPath));
 const scrypt = promisify(scryptCallback);
 const manager = MANAGER_ROLES;
 const roles = ROLE_VALUES;
@@ -189,7 +193,7 @@ function authenticate(req, res, next) {
     next();
   } catch { res.status(401).json({ message: 'Sign in to continue.' }); }
 }
-app.get('/', (_req, res) => res.type('text').send('Campus Room Scheduler API is running.'));
+app.get('/', (_req, res) => res.sendFile(path.join(clientBuildPath, 'index.html')));
 app.get('/api/health', (_req, res) => res.json({ ok: true, database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' }));
 app.post('/api/auth/login', asyncRoute(async (req, res) => {
   const rawIdentifier = req.body.identifier ?? req.body.email;

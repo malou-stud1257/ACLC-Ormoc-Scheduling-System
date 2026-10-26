@@ -4,7 +4,7 @@ services:
     runtime: node
     region: singapore
     plan: free
-    buildCommand: npm install --omit=dev
+    buildCommand: npm install && npm run build --workspace client
     startCommand: node server/src/index.js
     healthCheckPath: /api/health
     envVars:
