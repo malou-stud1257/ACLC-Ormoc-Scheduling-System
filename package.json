@@ -1,0 +1,21 @@
+{
+  "name": "campus-room-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "node scripts/run.js dev",
+    "dev:server": "node scripts/run.js server",
+    "dev:client": "node scripts/run.js client",
+    "seed": "node scripts/run.js seed",
+    "link:instructors": "node scripts/run.js linkInstructors",
+    "provision:instructors": "node scripts/run.js provisionInstructors",
+    "migrate:academic-records": "node server/src/migrate-academic-records.js",
+    "cleanup:sample-data": "node server/src/cleanup-sample-data.js",
+    "init-admin": "node server/src/init-admin.js",
+    "build": "node scripts/run.js build",
+    "test": "node --test server/test/*.test.js client/src/time-format.test.js",
+    "start": "node scripts/run.js server"
+  }
+}

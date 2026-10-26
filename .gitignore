@@ -1,0 +1,11 @@
+node_modules/
+.pnpm-store/
+**/.pnpm-store/
+client/dist/
+server/.env
+atlas-credentials.env
+mongo-backup/
+.tmp_inspect/
+tmp_inspect/
+**/.idea/
+.DS_Store
